@@ -5,6 +5,7 @@ import REQUEST_API from '../services/serviceAPI';
 
 function StarWarsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
+  const [name, setName] = useState('');
 
   const getAPI = async () => {
     try {
@@ -17,9 +18,17 @@ function StarWarsProvider({ children }) {
     }
   };
 
+  const filter = {
+    filterByName: {
+      name,
+    },
+  };
+
   const contextStarWars = {
     planets,
     getAPI,
+    ...filter,
+    setName,
   };
 
   return (
