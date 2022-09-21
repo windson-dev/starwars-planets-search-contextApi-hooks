@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import StarWarsContext from './StarWarsContext';
 import REQUEST_API from '../services/serviceAPI';
@@ -6,34 +6,30 @@ import REQUEST_API from '../services/serviceAPI';
 function StarWarsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [name, setName] = useState('');
+  const [findByNumbers, setFindByNumbers] = useState([]);
 
-  const getAPI = async () => {
+  useEffect(() => {
     try {
-      await REQUEST_API().then((allPlantes) => {
+      REQUEST_API().then((allPlantes) => {
         allPlantes.forEach((element) => delete element.residents);
         setPlanets(allPlantes);
       });
     } catch (e) {
       console.log(e.message);
     }
-  };
-
-  const filter = {
-    filterByName: {
-      name,
-    },
-  };
+  }, []);
 
   const contextStarWars = {
     planets,
-    getAPI,
-    ...filter,
+    name,
+    findByNumbers,
     setName,
+    setFindByNumbers,
   };
 
   return (
     <StarWarsContext.Provider value={ contextStarWars }>
-      {children}
+      { children }
     </StarWarsContext.Provider>
   );
 }
