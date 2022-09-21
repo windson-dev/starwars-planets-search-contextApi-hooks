@@ -5,7 +5,6 @@ const TableBody = () => {
   const { planets, name, findByNumbers } = useContext(StarWarsContext);
 
   let filterPlanets = planets.filter((value) => value.name.includes(name));
-  console.log(findByNumbers);
   findByNumbers.forEach(({ column, comparison, value }) => {
     filterPlanets = filterPlanets.filter((planet) => {
       const TEN = 10;
@@ -15,6 +14,7 @@ const TableBody = () => {
       return filterPlanets;
     });
   });
+
   return (
     <tbody>
       { filterPlanets

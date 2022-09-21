@@ -32,6 +32,40 @@ const FilterInputs = () => {
     return value;
   };
 
+  const removeFilter = (remove) => {
+    setFindByNumbers((prevState) => prevState.filter((element) => element !== remove));
+  };
+
+  const removeAllFilters = () => {
+    setFindByNumbers([]);
+  };
+
+  const createButtonDeleteFilters = () => (
+    <>
+      {findByNumbers.map((element, index) => (
+        <p
+          key={ index }
+          data-testid="filter"
+        >
+          {element.column}
+          <button
+            type="button"
+            onClick={ () => removeFilter(element) }
+          >
+            Remover filtro
+          </button>
+        </p>
+      ))}
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ removeAllFilters }
+      >
+        Remover todos os filtros
+      </button>
+    </>
+  );
+
   return (
     <>
       <label htmlFor={ name }>
@@ -82,6 +116,7 @@ const FilterInputs = () => {
       >
         Filtrar
       </button>
+      {createButtonDeleteFilters()}
     </>
   );
 };
