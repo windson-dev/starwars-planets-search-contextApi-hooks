@@ -3,19 +3,34 @@ import StarWarsContext from '../contexts/StarWarsContext';
 
 const FilterInputs = () => {
   const {
+    findByNumbers,
     setFindByNumbers,
     setName,
     name,
   } = useContext(StarWarsContext);
+  const [value1, setValue] = useState('0');
+  const [column1, setColumn] = useState('population');
+  const [comparison1, setComparison] = useState('maior que');
 
-  const comparisons = [
-    'maior que', 'menor que', 'igual a'];
+  const comparisons = ['maior que', 'menor que', 'igual a'];
 
-  const TEN = 10;
+  const getPrevState = () => {
+    const TEN = 10;
+    setFindByNumbers((prevState) => [
+      ...prevState,
+      { value: parseFloat(value1, TEN),
+        column: column1,
+        comparison: comparison1 },
+    ]);
+  };
 
-  const [value, setValue] = useState('0');
-  const [column, setColumn] = useState('population');
-  const [comparison, setComparison] = useState('maior que');
+  const deleteRepeatFilters = (element) => {
+    let value = false;
+    findByNumbers.forEach((findElement) => {
+      if (findElement.column === element) value = true;
+    });
+    return value;
+  };
 
   return (
     <>
@@ -27,11 +42,11 @@ const FilterInputs = () => {
           onChange={ ({ target: { value: nameValue } }) => setName(nameValue) }
         />
       </label>
-      <label htmlFor={ value }>
+      <label htmlFor={ value1 }>
         Numero:
         <input
           data-testid="value-filter"
-          value={ value }
+          value={ value1 }
           onChange={ ({ target: { value: valueNumber } }) => setValue(valueNumber) }
         />
       </label>
@@ -39,7 +54,11 @@ const FilterInputs = () => {
         data-testid="column-filter"
         onChange={ ({ target: { value: valueColumn } }) => setColumn(valueColumn) }
       >
-        <option value="population">population</option>
+        {
+          deleteRepeatFilters('population')
+            ? ''
+            : <option value="population">population</option>
+        }
         <option value="orbital_period">orbital_period</option>
         <option value="diameter">diameter</option>
         <option value="rotation_period">rotation_period</option>
@@ -59,8 +78,7 @@ const FilterInputs = () => {
       <button
         type="button"
         data-testid="button-filter"
-        onClick={ () => setFindByNumbers([
-          { value: parseFloat(value, TEN), column, comparison }]) }
+        onClick={ getPrevState }
       >
         Filtrar
       </button>
